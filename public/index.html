@@ -61,7 +61,7 @@
     body {
       min-height: max(884px, 100dvh);
     }
-    /* Hide Leaflet attribution to keep the UI clean (Optional, but looks better for games) */
+    /* Hide Leaflet attribution to keep the UI clean */
     .leaflet-control-container { display: none !important; }
   </style>
 </head>
@@ -92,11 +92,11 @@
 
   <main class="relative h-screen w-screen overflow-hidden bg-surface-dim">
     
-    <div class="absolute inset-0 z-0 pointer-events-none opacity-40 mix-blend-multiply filter grayscale contrast-[1.2]">
+    <div class="absolute inset-0 z-0 pointer-events-none opacity-85 filter grayscale-[40%] contrast-[1.1]">
       <div id="dynamic-map" class="w-full h-full bg-surface-variant object-cover"></div>
     </div>
     
-    <div class="absolute inset-0 z-0 bg-primary/10 mix-blend-multiply pointer-events-none"></div>
+    <div class="absolute inset-0 z-0 bg-primary/10 mix-blend-overlay pointer-events-none"></div>
 
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none">
       <div class="relative flex items-center justify-center">
@@ -156,7 +156,7 @@
     let isChecking = false;
     let isModalOpen = false;
     let isGameComplete = false;
-    let wayfinderMap = null; // Holds the Leaflet map instance
+    let wayfinderMap = null; 
 
     // 2. DOM Elements
     const discoveryModal = document.getElementById('discovery-modal');
@@ -179,7 +179,6 @@
 
     // 4. Map Initialization Logic
     function initializeMap(lat, lon) {
-      // Create map locked entirely from user interaction
       wayfinderMap = L.map('dynamic-map', {
         center: [lat, lon],
         zoom: 16,
@@ -192,7 +191,6 @@
         keyboard: false
       });
 
-      // Using CartoDB's minimal light map (perfect for overlaying styles)
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
         maxZoom: 19
       }).addTo(wayfinderMap);
@@ -205,7 +203,6 @@
       
       trackingStatus.innerText = "Active";
 
-      // Initialize or Pan the map
       if (!wayfinderMap) {
         initializeMap(lat, lon);
       } else {
@@ -252,7 +249,7 @@
       trackingStatus.innerText = "Signal Lost";
     }
 
-    // 6. The Continuous Polling Engine
+    // 6. Continuous Polling Engine
     setInterval(() => {
       if (navigator.geolocation && !isModalOpen && !isGameComplete) {
         navigator.geolocation.getCurrentPosition(checkLocationAgainstBackend, handleLocationError, {
