@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Wayfinder - Map Discovery</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#ffe16d",
+            "on-surface-variant": "#42493e",
+            "outline-variant": "#c2c9bb",
+            "surface-bright": "#ecffe2",
+            "outline": "#72796e",
+            "on-primary-fixed": "#002201",
+            "primary": "#154212",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed-variant": "#23501e",
+            "on-tertiary-fixed": "#221b00",
+            "surface-container": "#c7fcb8",
+            "primary-fixed-dim": "#a1d494",
+            "on-tertiary-container": "#4c3e00",
+            "tertiary-fixed-dim": "#e9c400",
+            "surface-tint": "#3b6934",
+            "surface": "#ecffe2",
+            "surface-dim": "#b4e8a6",
+            "surface-container-low": "#d6ffc9",
+            "surface-container-highest": "#bcf0ae",
+            "on-background": "#002201",
+            "on-surface": "#002201",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "inverse-surface": "#0a3909",
+            "on-secondary-fixed": "#1f1c0f",
+            "on-secondary-container": "#696454",
+            "secondary-container": "#eae2ce",
+            "on-error-container": "#93000a",
+            "inverse-primary": "#a1d494",
+            "surface-variant": "#bcf0ae",
+            "secondary-fixed-dim": "#cdc6b3",
+            "surface-container-high": "#c1f6b3",
+            "on-tertiary-fixed-variant": "#544600",
+            "on-primary-container": "#9dd090",
+            "on-primary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "tertiary": "#705d00",
+            "tertiary-container": "#c9a900",
+            "on-secondary-fixed-variant": "#4b4738",
+            "secondary-fixed": "#eae2ce",
+            "background": "#ecffe2",
+            "on-secondary": "#ffffff",
+            "secondary": "#635e4f",
+            "primary-fixed": "#bcf0ae",
+            "inverse-on-surface": "#caffbb",
+            "primary-container": "#2d5a27"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Newsreader"],
+            "label": ["Plus Jakarta Sans"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .parchment-texture {
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        opacity: 0.05;
+        pointer-events: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-label selection:bg-tertiary-fixed selection:text-on-tertiary-fixed overflow-hidden">
+  
+  <header class="flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50 bg-[#ecffe2]/80 dark:bg-[#154212]/80 backdrop-blur-md">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-[#154212] dark:text-[#ecffe2]" data-icon="explore">explore</span>
+      <span class="text-2xl font-black tracking-tighter text-[#154212] dark:text-[#ecffe2] uppercase font-headline">Wayfinder</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="hidden md:flex items-center bg-surface-container-high/60 backdrop-blur px-3 py-1 rounded-full gap-3 border border-outline-variant/20">
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+          <span class="text-[12px] font-bold text-on-surface">1,240 XP</span>
+        </div>
+        <div class="h-3 w-[1px] bg-outline-variant/30"></div>
+        <div class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-primary" data-icon="distance">distance</span>
+          <span class="text-[12px] font-bold text-on-surface">Tracking...</span>
+        </div>
+      </div>
+      <div class="w-10 h-10 rounded-full border-2 border-primary-fixed-dim overflow-hidden hover:opacity-80 transition-opacity active:scale-90 duration-200 cursor-pointer">
+        <img alt="Explorer Profile" src="https://ui-avatars.com/api/?name=Explorer&background=154212&color=ecffe2"/>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative h-screen w-screen overflow-hidden bg-surface-dim">
+    <div class="absolute inset-0 z-0">
+      <div class="w-full h-full bg-surface-variant object-cover grayscale-[20%] brightness-[1.05] contrast-[1.1]"></div>
+      <div class="absolute inset-0 bg-primary/5 mix-blend-multiply"></div>
+    </div>
+
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+      <div class="relative flex items-center justify-center">
+        <div class="absolute w-24 h-24 bg-primary/20 rounded-full animate-ping"></div>
+        <div class="absolute w-12 h-12 bg-primary/40 rounded-full animate-pulse"></div>
+        <div class="relative w-6 h-6 bg-primary rounded-full border-2 border-surface flex items-center justify-center shadow-lg">
+          <div class="w-2 h-2 bg-surface rounded-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="absolute bottom-28 right-6 z-40 w-14 h-14 bg-tertiary-fixed text-on-tertiary-fixed rounded-full shadow-[0_8px_24px_rgba(112,93,0,0.3)] flex items-center justify-center hover:scale-110 active:scale-90 transition-transform">
+      <span class="material-symbols-outlined text-3xl" data-icon="explore" style="font-variation-settings: 'FILL' 1;">explore</span>
+    </button>
+
+    <div id="discovery-modal" class="hidden absolute inset-0 z-50 flex items-center justify-center px-6">
+      <div class="absolute inset-0 bg-on-background/10 backdrop-blur-sm"></div>
+      <div class="relative w-full max-w-sm bg-surface-container-lowest/80 backdrop-blur-2xl rounded-[2rem] border border-surface-container-highest overflow-hidden shadow-2xl flex flex-col items-center text-center p-8">
+        
+        <div class="parchment-texture absolute inset-0"></div>
+        
+        <div class="w-20 h-20 bg-tertiary-container text-on-tertiary-container rounded-full flex items-center justify-center mb-6 shadow-inner">
+          <span class="material-symbols-outlined text-4xl" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+        </div>
+        
+        <h2 id="modal-title" class="font-headline font-black text-2xl tracking-tight text-on-surface uppercase mb-3 leading-none">
+          Discovery Found!
+        </h2>
+        
+        <p id="riddle-text" class="font-body italic text-lg text-on-surface-variant leading-relaxed mb-8 px-2">
+          "Loading your next clue..."
+        </p>
+        
+        <div class="w-full space-y-3 relative z-10">
+          <button id="journal-btn" class="w-full py-4 bg-gradient-to-r from-primary to-primary-container text-on-primary rounded-xl font-label font-extrabold uppercase tracking-widest text-sm hover:opacity-90 active:scale-[0.98] transition-all shadow-lg">
+            Add to Journal
+          </button>
+          <button id="dismiss-btn" class="w-full py-4 bg-surface-container-high text-primary rounded-xl font-label font-extrabold uppercase tracking-widest text-sm hover:bg-surface-container-highest active:scale-[0.98] transition-all">
+            Dismiss
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50 flex justify-around items-center p-2 bg-[#ecffe2]/70 dark:bg-[#154212]/70 backdrop-blur-xl rounded-full border border-[#ecffe2]/20 shadow-[0_8px_32px_0_rgba(21,66,18,0.15)]">
+    <a class="flex flex-col items-center justify-center bg-[#154212] dark:bg-[#ecffe2] text-[#ecffe2] dark:text-[#154212] rounded-full w-14 h-14 shadow-lg transition-transform hover:scale-110 active:scale-95 duration-200" href="#">
+      <span class="material-symbols-outlined" data-icon="map" style="font-variation-settings: 'FILL' 1;">map</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-[10px] font-extrabold uppercase tracking-widest mt-0.5">Map</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-[#154212] dark:text-[#ecffe2] opacity-60 transition-transform hover:scale-110 active:scale-95 duration-200" href="#">
+      <span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+      <span class="font-['Plus_Jakarta_Sans'] text-[10px] font-extrabold uppercase tracking-widest mt-0.5">Journal</span>
+    </a>
+  </nav>
+
+  <script>
+    // 1. State Management
+    let currentStep = 0;
+    let isChecking = false;
+    let isModalOpen = false;
+    let isGameComplete = false;
+
+    // 2. DOM Elements
+    const discoveryModal = document.getElementById('discovery-modal');
+    const riddleText = document.getElementById('riddle-text');
+    const modalTitle = document.getElementById('modal-title');
+    const dismissBtn = document.getElementById('dismiss-btn');
+    const journalBtn = document.getElementById('journal-btn');
+
+    // 3. UI Interactions
+    function hideModal() {
+      discoveryModal.classList.add('hidden');
+      isModalOpen = false;
+    }
+
+    dismissBtn.addEventListener('click', hideModal);
+    journalBtn.addEventListener('click', () => {
+      // Logic to save to journal goes here
+      hideModal();
+    });
+
+    // 4. Core Location Check Logic
+    async function checkLocationAgainstBackend(position) {
+      // Prevent overlapping checks or checking while reading a clue
+      if (isChecking || isModalOpen || isGameComplete) return;
+      isChecking = true;
+
+      try {
+        const response = await fetch('/api/check', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userLat: position.coords.latitude,
+            userLon: position.coords.longitude,
+            currentStep: currentStep
+          })
+        });
+
+        const data = await response.json();
+
+        // Handle Game Over state
+        if (data.completed) {
+          isGameComplete = true;
+          return;
+        }
+
+        // Handle Success State (User found the location!)
+        if (data.found) {
+          // Populate the modal with the narrative text
+          riddleText.innerText = `"${data.message}"`;
+          
+          if (data.isGameComplete) {
+            modalTitle.innerText = "Journey Complete";
+          } else {
+            modalTitle.innerText = "Fragment Discovered";
+          }
+          
+          // Show the modal to the user
+          discoveryModal.classList.remove('hidden');
+          isModalOpen = true;
+
+          // Advance the game state to the next objective
+          currentStep = data.nextStep;
+        }
+      } catch (error) {
+        console.error("Cartography error: Failed to connect to Wayfinder servers.", error);
+      } finally {
+        isChecking = false;
+      }
+    }
+
+    function handleLocationError(error) {
+      console.warn(`GPS Signal Lost (${error.code}): ${error.message}`);
+    }
+
+    // 5. The Continuous Polling Engine
+    // Check every 10 seconds to balance responsiveness with battery life
+    setInterval(() => {
+      if (navigator.geolocation && !isModalOpen && !isGameComplete) {
+        navigator.geolocation.getCurrentPosition(checkLocationAgainstBackend, handleLocationError, {
+          enableHighAccuracy: true,
+          timeout: 5000, 
+          maximumAge: 0 
+        });
+      }
+    }, 10000);
+  </script>
+</body>
+</html>
