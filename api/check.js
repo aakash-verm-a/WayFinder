@@ -8,7 +8,7 @@ const TREASURES = [
     id: "treasure_1",
     lat: 29.947631,
     lon: 76.822402, 
-    radius: 10000, 
+    radius: 300, 
     hint: "You found the first clue! Next, look under the old oak tree in the park."
   },
   {
